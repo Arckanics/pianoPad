@@ -5,14 +5,40 @@ import styled from 'styled-components'
 const Home = () => {
   const { btnsList, toggleNote } = useSounds()
 
-  useEffect(() => {
+  const keyDown = ({ key }) => {
+    let strArray = `&é"'(-è_`
+    let keySet = strArray.indexOf(key)
+    let noteList = [
+      "C4","D4","E4","F4","G4","A4","B4","C5"
+    ]
+    if (keySet >= 0) {
+      if (btns[keySet].isPlaying != null) {
+        clearTimeout(btns[keySet].isPlaying)
+      }
+      btns[keySet].isPlaying = setTimeout(() => {
+        btns[keySet].isPlaying = null
+        setBtns(btns => [...btns])
+      }, 1000)
+      setBtns(btns => [...btns])
+      toggleNote(noteList[keySet])
+    }
     
-  })
+  }
+
+  useEffect(() => {
+    window.addEventListener('keydown', keyDown)
+
+    return () => {
+      window.removeEventListener('keydown', keyDown)
+    }
+  }, [])
+
+  const [btns, setBtns] = useState([...btnsList])
 
   return (
     <Grid>
       {
-        btnsList.map(({soundPlay, isPlaying}, k) => {
+        btns.map(({soundPlay, isPlaying}, k) => {
           return <Gbutton key={k} onClick={soundPlay} className={isPlaying ? "active" : null}/>
         })
       }
@@ -72,7 +98,16 @@ const Gbutton = styled.div`
       background-color: hsl(20, 90%, 65%);
     }
   }
+
   &:active {
+    &::before {
+      background-color: hsl(20, 90%, 55%);
+    }
+  }
+
+  &.active {
+    background-color: hsl(20, 90%, 75%);
+    border: outset 2px hsl(20, 90%, 95%);
     &::before {
       background-color: hsl(20, 90%, 55%);
     }

@@ -23,28 +23,7 @@ export default function useSounds() {
   const toggleNote = (note) => {
     return mySampler.current.triggerAttackRelease([note], 2)
   }
-
-  const keyDown = ({ key }) => {
-    let strArray = `&é"'(-è_`
-    let keySet = strArray.indexOf(key)
-    let noteList = [
-      "C4","D4","E4","F4","G4","A4","B4","C5"
-    ]
-    if (keySet >= 0) {
-      toggleNote(noteList[keySet], keySet)
-    }
-    
-  }
-
-  useEffect(() => {
-    window.addEventListener('keydown', keyDown)
-
-    return () => {
-      window.removeEventListener('keydown', keyDown)
-    }
-  }, [])
-
-
+  
   const btnsList = [
     {
       soundPlay: () => toggleNote("C4"),
@@ -75,5 +54,5 @@ export default function useSounds() {
 
   
 
-  return { btnsList };
+  return { btnsList, toggleNote };
 }
